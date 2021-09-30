@@ -1,37 +1,54 @@
 package com.CourseProject.MathApp.controllers;
 
 import com.CourseProject.MathApp.models.Role;
-import com.CourseProject.MathApp.models.User;
+import com.CourseProject.MathApp.security.FirebaseService;
 import com.CourseProject.MathApp.service.UserServiceImpl;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin
 public class AdminController {
-    //    @Autowired
-//    private UserRepository userRepository;
-    @Autowired
-    private UserServiceImpl userService;
+    private final FirebaseService firebaseService;
+    private final UserServiceImpl userService;
 
-    //    @GetMapping("/admin")
-//    public String tableMain(Model model, Authentication auth) {
-//        if (auth.getAuthorities().contains(Role.USER)) {
-//            return "redirect:/";
-//        }
-//        model.addAttribute("users", userService.findAllByRole(Role.USER));
-//        model.addAttribute("title", "Admin page");
-//        return "admin";
-//    }
+    @Autowired
+    public AdminController(UserServiceImpl userService, FirebaseService firebaseService) {
+        this.userService = userService;
+        this.firebaseService = firebaseService;
+    }
+
     @GetMapping("/getAll")
-    public List<User> getAllUsers() {
-        return userService.findAllByRole(Role.USER);
+    public ResponseEntity<?> getAllUsers(HttpServletRequest request) throws FirebaseAuthException {
+        FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+        if (Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
+            return new ResponseEntity<>(userService.findAllByRole(Role.USER), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+    }
+
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<?> getLoginPage(@RequestParam(value = "uid", required = false) String uid, HttpServletRequest request) throws FirebaseAuthException {
+        FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+        if (Objects.equals(decodedToken.getUid(), uid) || Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
+            return new ResponseEntity<>(userService.findFirstByUid(uid), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+//        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
+//        return userService.findFirstByUid(uid);
+
     }
 
 }

@@ -1,31 +1,34 @@
 import React, {useContext} from "react";
-// import {GOOGLE_AUTH_URL} from "../constants";
-import {facebookProvider, githubProvider, googleProvider} from "../config/authMethods";
-import socialMediaAuth from "../service/socialAuth";
+import {facebookProvider, githubProvider, googleProvider} from "../config/AuthMethods";
 import {AuthContext} from "../service/auth";
 import {Redirect} from "react-router-dom";
-import {ACCESS_TOKEN} from "../constants";
-import { login } from '../util/APIUtils';
+import axios from "axios";
+import {API_BASE_URL} from "../constants";
+import {getAuth, signInWithPopup} from "firebase/auth";
+import firebase from "../config/FirebaseConfig";
 
+const auth = getAuth(firebase);
 export default function Login() {
+    const {currentUser} = useContext(AuthContext);
     const handleOnClick = async (provider) => {
-        const response  = await socialMediaAuth(provider);
-        const loginRequest = Object.assign({}, {
-            email: response.email,
-            provider: provider.providerId,
-            name: response.displayName,
+        await signInWithPopup(auth, provider);
+        // await socialMediaAuth(provider);
+        console.log(provider)
+        // await axios.post(API_BASE_URL + "/auth/login", loginRequest)
+        await auth.currentUser.getIdToken(true).then((idToken) => {
+            axios.post(API_BASE_URL + "/auth/login", {},{
+                headers: {
+                    "Content-Type": "application/json",
+                    idToken: idToken,
+                },
             });
-        login(loginRequest)
-            .then(response => {
-                localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            }).catch(error => {
-            console.log(error);
+        }).catch((error) =>{
+            console.log(error)
         });
-        console.log(response)
     };
-    const { currentUser } = useContext(AuthContext);
+
     if (currentUser) {
-        return <Redirect to="/" />;
+        return <Redirect to="/"/>;
     }
     return (
         <div className="container mt-3 mb-2 text-center">

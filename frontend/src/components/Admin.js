@@ -1,5 +1,8 @@
 import React from "react";
-
+import UsersTable from "./UsersTable";
+import {Container} from "react-bootstrap";
 export const Admin = () => (
-    <h1>Admin page</h1>
+    <Container>
+    <UsersTable/>
+    </Container>
 )

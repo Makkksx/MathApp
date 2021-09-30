@@ -1,38 +1,44 @@
 package com.CourseProject.MathApp.controllers;
 
-import com.CourseProject.MathApp.models.Role;
 import com.CourseProject.MathApp.models.User;
-import com.CourseProject.MathApp.payload.LoginRequest;
 import com.CourseProject.MathApp.service.UserServiceImpl;
+import com.google.api.client.util.ArrayMap;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    private final UserServiceImpl userService;
     @Autowired
-    private UserServiceImpl userService;
+    public AuthController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        User user = userService.findFirstByEmailAndProvider(loginRequest.getEmail(),
-                loginRequest.getProvider());
-        if (user == null) {
-            user = new User();
-            user.setUsername(loginRequest.getName());
-            user.setProvider(loginRequest.getProvider());
-            user.setEmail(loginRequest.getEmail());
-            user.setCreatedTasks(0);
-            user.setSolvedTasks(0);
-            user.setRole(Role.USER);
-        }
+    public ResponseEntity<?> authenticateUser(HttpServletRequest request) throws FirebaseAuthException {
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
+        String provider = (String) ((ArrayMap<?,?>) decodedToken.getClaims().get("firebase")).get("sign_in_provider");
+        User user = userService.findFirstByUid(decodedToken.getUid())
+                .orElse(new User(
+                        decodedToken.getUid(),
+                        decodedToken.getName(),
+                        decodedToken.getEmail(),
+                        provider
+                ));
         userService.saveUser(user);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
