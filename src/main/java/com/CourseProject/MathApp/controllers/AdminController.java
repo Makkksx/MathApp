@@ -28,6 +28,7 @@ public class AdminController {
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllUsers(HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("GetAll");
         FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
         if (Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
             return new ResponseEntity<>(userService.findAllByRole(Role.USER), HttpStatus.OK);
@@ -40,6 +41,7 @@ public class AdminController {
 
     @GetMapping("/getProfile")
     public ResponseEntity<?> getLoginPage(@RequestParam(value = "uid", required = false) String uid, HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("GetProfile");
         FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
         if (Objects.equals(decodedToken.getUid(), uid) || Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
             return new ResponseEntity<>(userService.findFirstByUid(uid), HttpStatus.OK);

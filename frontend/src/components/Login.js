@@ -6,9 +6,11 @@ import axios from "axios";
 import {API_BASE_URL} from "../constants";
 import {getAuth, signInWithPopup} from "firebase/auth";
 import firebase from "../config/FirebaseConfig";
+import {useAlert} from "react-alert";
 
 const auth = getAuth(firebase);
-export default function Login() {
+export const Login = () => {
+    const alert = useAlert()
     const {currentUser} = useContext(AuthContext);
     const handleOnClick = async (provider) => {
         await signInWithPopup(auth, provider);
@@ -21,8 +23,12 @@ export default function Login() {
                     "Content-Type": "application/json",
                     idToken: idToken,
                 },
+            }).catch((error) =>{
+                alert.show("No access!", {timeout: 2000,type: 'error'})
+                console.log(error)
             });
         }).catch((error) =>{
+            alert.show("Bad token", {timeout: 2000,type: 'error'})
             console.log(error)
         });
     };

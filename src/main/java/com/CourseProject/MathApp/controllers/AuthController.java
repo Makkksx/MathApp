@@ -28,6 +28,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("Login");
         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
         String provider = (String) ((ArrayMap<?,?>) decodedToken.getClaims().get("firebase")).get("sign_in_provider");
         User user = userService.findFirstByUid(decodedToken.getUid())

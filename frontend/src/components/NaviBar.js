@@ -3,11 +3,12 @@ import {Container, Nav, Navbar} from "react-bootstrap";
 import {LinkContainer} from 'react-router-bootstrap'
 import {getAuth} from "firebase/auth";
 import {AuthContext} from "../service/auth";
+import {useAlert} from "react-alert";
 
 export default function NaviBar() {
     const {currentUser} = useContext(AuthContext);
     const [admin, setAdmin] = useState(false);
-
+    const alert = useAlert()
     useEffect(() => {
         if (currentUser) {
             currentUser.getIdTokenResult()
@@ -17,15 +18,17 @@ export default function NaviBar() {
                     }
                 })
                 .catch((error) => {
+                    alert.show("Bad token", {timeout: 2000,type: 'error'})
                     console.log(error);
                 })
         }else{
             setAdmin(false)
         }
-    }, [currentUser, admin]);
+    }, [currentUser, admin, alert]);
 
     const handleLogout = () => {
         getAuth().signOut();
+        window.location.href = '/home';
     }
 
     return (
@@ -45,6 +48,9 @@ export default function NaviBar() {
                                 <Nav.Link>Admin</Nav.Link>
                             </LinkContainer>) : (<div/>)
                             }
+                            {currentUser ? (<LinkContainer to="/task">
+                                <Nav.Link>Task</Nav.Link>
+                            </LinkContainer>) : (<div/>)}
                         </Nav>
                         <Nav>
                             {currentUser ? (
