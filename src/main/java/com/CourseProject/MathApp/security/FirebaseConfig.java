@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Configuration
@@ -18,7 +19,8 @@ public class FirebaseConfig {
     @Bean
     public void firebaseInit() throws IOException {
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.getApplicationDefault())
+                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\mvolo\\IdeaProjects\\MathApp\\key.json")))
+//                .setCredentials(GoogleCredentials.getApplicationDefault())
                 .setStorageBucket("poised-cathode-325720.appspot.com")
                 .build();
         if (FirebaseApp.getApps().isEmpty()) {

@@ -9,11 +9,12 @@ import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -21,6 +22,7 @@ import java.util.Map;
 public class AuthController {
 
     private final UserServiceImpl userService;
+
     @Autowired
     public AuthController(UserServiceImpl userService) {
         this.userService = userService;
@@ -29,18 +31,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(HttpServletRequest request) throws FirebaseAuthException {
         System.out.println("Login");
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
-        String provider = (String) ((ArrayMap<?,?>) decodedToken.getClaims().get("firebase")).get("sign_in_provider");
-        User user = userService.findFirstByUid(decodedToken.getUid())
-                .orElse(new User(
-                        decodedToken.getUid(),
-                        decodedToken.getName(),
-                        decodedToken.getEmail(),
-                        provider
-                ));
-        userService.saveUser(user);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
+            String provider = (String) ((ArrayMap<?, ?>) decodedToken.getClaims().get("firebase")).get("sign_in_provider");
+            User user = userService.findFirstByUid(decodedToken.getUid())
+                    .orElse(new User(
+                            decodedToken.getUid(),
+                            decodedToken.getName(),
+                            decodedToken.getEmail(),
+                            provider
+                    ));
+            userService.saveUser(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
 

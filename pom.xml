@@ -15,6 +15,7 @@
 	<description>Course project for Itransition</description>
 	<properties>
 		<java.version>16</java.version>
+		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -38,6 +39,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+			<scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -48,6 +51,16 @@
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
 			<version>8.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>7.0.0.Final</version>
 		</dependency>
     </dependencies>
 
@@ -63,80 +76,28 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.8</source> <!-- depending on your project -->
+					<target>1.8</target> <!-- depending on your project -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.hibernate.validator</groupId>
+							<artifactId>hibernate-validator-annotation-processor</artifactId>
+							<version>7.0.0.Final</version>
+						</path>
+						<!-- other annotation processors -->
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-<!--			<plugin>-->
-<!--				<groupId>com.github.eirslett</groupId>-->
-<!--				<artifactId>frontend-maven-plugin</artifactId>-->
-<!--				<version>1.12.0</version>-->
-
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>Install node and npm</id>-->
-<!--						<goals>-->
-<!--							<goal>install-node-and-npm</goal>-->
-<!--						</goals>-->
-<!--						<phase>generate-resources</phase>-->
-<!--						<configuration>-->
-<!--							<nodeVersion>v16.10.0</nodeVersion>-->
-<!--							<npmVersion>7.24.0</npmVersion>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-
-<!--					<execution>-->
-<!--						<id>npm install</id>-->
-<!--						<goals>-->
-<!--							<goal>npm</goal>-->
-<!--						</goals>-->
-<!--						<phase>generate-resources</phase>-->
-<!--						<configuration>-->
-<!--							<arguments>install</arguments>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-
-<!--					<execution>-->
-<!--						<id>npm build</id>-->
-<!--						<goals>-->
-<!--							<goal>npm</goal>-->
-<!--						</goals>-->
-<!--						<phase>generate-resources</phase>-->
-<!--						<configuration>-->
-<!--							<arguments>run build</arguments>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--				<configuration>-->
-<!--					<nodeVersion>v16.10.0</nodeVersion>-->
-<!--					<workingDirectory>frontend</workingDirectory>-->
-<!--					<installDirectory>target</installDirectory>-->
-<!--				</configuration>-->
-
-<!--			</plugin>-->
-
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-resources-plugin</artifactId>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>Copy my react app into my Spring Boot target static folder</id>-->
-<!--						<phase>process-resources</phase>-->
-<!--						<goals>-->
-<!--							<goal>copy-resources</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<outputDirectory>target/classes/static</outputDirectory>-->
-<!--							<resources>-->
-<!--								<resource>-->
-<!--									<directory>frontend/build</directory>-->
-<!--									<filtering>true</filtering>-->
-<!--								</resource>-->
-<!--							</resources>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
 		</plugins>
 	</build>
 

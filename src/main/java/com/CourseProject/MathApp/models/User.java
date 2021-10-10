@@ -7,10 +7,10 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "users_table")
 public class User {
@@ -29,6 +29,12 @@ public class User {
     private int solvedTasks;
     private int createdTasks;
     private Role role;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_tasks",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    private Set<Task> tasks;
 
     public User(String uid, String username, String email, String provider) {
         this.uid = uid;

@@ -29,12 +29,18 @@ public class AdminController {
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllUsers(HttpServletRequest request) throws FirebaseAuthException {
         System.out.println("GetAll");
-        FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
-        if (Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
-            return new ResponseEntity<>(userService.findAllByRole(Role.USER), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        try{
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            if (Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
+                return new ResponseEntity<>(userService.findAllByRole(Role.USER), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+
 
     }
 
@@ -42,15 +48,17 @@ public class AdminController {
     @GetMapping("/getProfile")
     public ResponseEntity<?> getLoginPage(@RequestParam(value = "uid", required = false) String uid, HttpServletRequest request) throws FirebaseAuthException {
         System.out.println("GetProfile");
-        FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
-        if (Objects.equals(decodedToken.getUid(), uid) || Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
-            return new ResponseEntity<>(userService.findFirstByUid(uid), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        try{
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            if (Objects.equals(decodedToken.getUid(), uid) || Boolean.TRUE.equals(decodedToken.getClaims().get("admin"))) {
+                return new ResponseEntity<>(userService.findFirstByUid(uid), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-//        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
-//        return userService.findFirstByUid(uid);
-
     }
 
 }

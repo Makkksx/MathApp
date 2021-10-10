@@ -16,7 +16,6 @@ export const Login = () => {
         await signInWithPopup(auth, provider);
         // await socialMediaAuth(provider);
         console.log(provider)
-        // await axios.post(API_BASE_URL + "/auth/login", loginRequest)
         await auth.currentUser.getIdToken(true).then((idToken) => {
             axios.post(API_BASE_URL + "/auth/login", {},{
                 headers: {
