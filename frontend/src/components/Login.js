@@ -3,7 +3,6 @@ import {facebookProvider, githubProvider, googleProvider} from "../config/AuthMe
 import {AuthContext} from "../service/Auth";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
-import {API_BASE_URL} from "../constants";
 import {getAuth, signInWithPopup} from "firebase/auth";
 import firebase from "../config/FirebaseConfig";
 import {useAlert} from "react-alert";
@@ -15,7 +14,7 @@ export const Login = () => {
     const handleOnClick = async (provider) => {
         await signInWithPopup(auth, provider);
         await auth.currentUser.getIdToken(true).then((idToken) => {
-            axios.post(API_BASE_URL + "/auth/login", {}, {
+            axios.post("/auth/login", {}, {
                 headers: {
                     "Content-Type": "application/json",
                     idToken: idToken,

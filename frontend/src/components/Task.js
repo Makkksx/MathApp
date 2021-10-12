@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {API_BASE_URL} from "../constants";
 import {useAlert} from "react-alert";
 import {getURLData} from "../util/APIUtils";
 import MDEditor from "@uiw/react-md-editor";
@@ -19,7 +18,7 @@ export default function Task() {
     useEffect(() => {
         async function fetchData() {
             await currentUser.getIdToken(true).then(async (idToken) => {
-                await axios.get(API_BASE_URL + "/task/getTask", {
+                await axios.get("/task/getTask", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,

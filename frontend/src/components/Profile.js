@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../service/Auth";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {API_BASE_URL} from "../constants";
 import {useAlert} from "react-alert";
 import {Card, Container, ListGroup} from "react-bootstrap";
 import TasksTable from "./ProfileBlocks/TasksTable";
@@ -15,7 +14,7 @@ export default function Profile() {
     useEffect(() => {
         async function fetchData() {
             await currentUser.getIdToken(true).then(async (idToken) => {
-                await axios.get(API_BASE_URL + "/admin/getProfile", {
+                await axios.get("/admin/getProfile", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,

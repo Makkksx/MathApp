@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import {API_BASE_URL} from "../../constants";
 import axios from "axios";
 import {useAlert} from "react-alert";
 import {AuthContext} from "../../service/Auth";
@@ -29,7 +28,7 @@ export default function TasksTable(uid) {
     useEffect(() => {
         async function fetchData() {
             await currentUser.getIdToken(true).then(async (idToken) => {
-                await axios.get(API_BASE_URL + "/task/getUserTasks", {
+                await axios.get("/task/getUserTasks", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,

@@ -8,7 +8,6 @@ import TaskHead from "./taskCreationBlocks/TaskHead";
 import TaskAnswer from "./taskCreationBlocks/TaskAnswer";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import axios from "axios";
-import {API_BASE_URL} from "../constants";
 
 const storage = getStorage();
 export const TaskCreation = () => {
@@ -91,7 +90,7 @@ export const TaskCreation = () => {
         };
         console.log(taskDto);
         await currentUser.getIdToken(true).then((idToken) => {
-            axios.post(API_BASE_URL + "/task/create", taskDto, {
+            axios.post("/task/create", taskDto, {
                 headers: {
                     "Content-Type": "application/json",
                     idToken: idToken,

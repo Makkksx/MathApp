@@ -4,7 +4,6 @@ import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./TaskHead.css"
 import axios from "axios";
-import {API_BASE_URL} from "../../constants";
 import {getAuth} from "firebase/auth";
 import firebase from "../../config/FirebaseConfig";
 import {useAlert} from "react-alert";
@@ -30,7 +29,7 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
     useEffect(() => {
         async function fetchData() {
             await auth.currentUser.getIdToken(true).then(async (idToken) => {
-                await axios.get(API_BASE_URL + "/task/getAllTagNames", {
+                await axios.get("/task/getAllTagNames", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,
@@ -42,7 +41,7 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
                     });
-                await axios.get(API_BASE_URL + "/task/getAllThemes", {
+                await axios.get("/task/getAllThemes", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,

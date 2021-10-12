@@ -1,7 +1,6 @@
 import {TagCloud} from "react-tagcloud";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {API_BASE_URL} from "../../constants";
 import {useAlert} from "react-alert";
 
 export default function HomeTagCloud() {
@@ -9,7 +8,7 @@ export default function HomeTagCloud() {
     const alert = useAlert()
     useEffect(() => {
         async function fetchData() {
-            await axios.get(API_BASE_URL + "/task/getAllTags")
+            await axios.get("/task/getAllTags")
                 .then(response => {
                     setTagData(response.data)
                 }).catch((error) => {

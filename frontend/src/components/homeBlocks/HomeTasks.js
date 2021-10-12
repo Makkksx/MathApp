@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
-import {API_BASE_URL} from "../../constants";
 import {useAlert} from "react-alert";
 import {Badge, Button, Card, Container} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
@@ -15,7 +14,7 @@ export default function HomeTasks() {
     const {currentUser} = useContext(AuthContext);
     useEffect(() => {
         async function fetchData() {
-            await axios.get(API_BASE_URL + "/task/getAllTasks")
+            await axios.get("/task/getAllTasks")
                 .then(async response => {
                     for (const task of response.data) {
                         await getURLData(task.conditionURL).then((condition) => {

@@ -33,3 +33,4 @@ target/
 /key.json
 /cors.json1
 /node_modules/
+/cors.json
