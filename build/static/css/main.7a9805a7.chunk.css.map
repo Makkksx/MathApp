@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://src/components/taskCreationBlocks/TaskHead.css"],"names":[],"mappings":"AAAA,OACI,sBAAuB,CACvB,QAAS,CACT,SACJ","file":"main.7a9805a7.chunk.css","sourcesContent":[".close {\r\n    background: transparent;\r\n    border: 0;\r\n    padding: 0;\r\n}"]}
