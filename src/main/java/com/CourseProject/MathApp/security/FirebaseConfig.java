@@ -17,8 +17,8 @@ public class FirebaseConfig {
     @Bean
     public void firebaseInit() throws IOException {
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\mvolo\\IdeaProjects\\MathApp\\key.json")))
-//                .setCredentials(GoogleCredentials.getApplicationDefault())
+//                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\mvolo\\IdeaProjects\\MathApp\\key.json")))
+                .setCredentials(GoogleCredentials.getApplicationDefault())
                 .setStorageBucket("poised-cathode-325720.appspot.com")
                 .build();
         if (FirebaseApp.getApps().isEmpty()) {

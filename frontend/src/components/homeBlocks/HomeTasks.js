@@ -1,26 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {API_BASE_URL} from "../../constants";
 import {useAlert} from "react-alert";
 import {Badge, Button, Card, Container} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
+import {getURLData} from "../../util/APIUtils";
+import MDEditor from '@uiw/react-md-editor';
+import {AuthContext} from "../../service/Auth";
 
 export default function HomeTasks() {
     const [tasks, setTasks] = useState([]);
     const alert = useAlert();
     const [pending, setPending] = useState(true);
-
+    const {currentUser} = useContext(AuthContext);
     useEffect(() => {
         async function fetchData() {
             await axios.get(API_BASE_URL + "/task/getAllTasks")
                 .then(async response => {
-                    // for (const task of response.data) {
-                    //     await getURLData(task.conditionURL).then((condition) => {
-                    //         task.condition = condition;
-                    //     })
-                    // }
+                    for (const task of response.data) {
+                        await getURLData(task.conditionURL).then((condition) => {
+                            task.condition = condition;
+                        })
+                    }
                     setTasks(response.data)
-                    // setTasks(response.data.reverse())
+                    setTasks(response.data.reverse())
                     setPending(false)
                 }).catch((error) => {
                     alert.show("No access!", {timeout: 2000, type: 'error'})
@@ -54,10 +57,10 @@ export default function HomeTasks() {
                         }
                     </Card.Header>
                     <Card.Body>
-                        {/*<MDEditor.Markdown source={task.condition}/>*/}
-                        <LinkContainer to={"/task/" + task.id}>
+                        <MDEditor.Markdown source={task.condition}/>
+                        {currentUser ? (<LinkContainer to={"/task/" + task.id}>
                             <Button className="mt-2">Go to task</Button>
-                        </LinkContainer>
+                        </LinkContainer>) : <div/>}
                     </Card.Body>
                 </Card>
             </Container>

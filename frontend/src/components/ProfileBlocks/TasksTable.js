@@ -40,7 +40,6 @@ export default function TasksTable(uid) {
                 })
                     .then(response => {
                         setData(response.data);
-                        console.log(response.data)
                     }).catch((error) => {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
@@ -59,13 +58,17 @@ export default function TasksTable(uid) {
 
 
     return (
-        <div className="container" style={{marginTop: 50}}>
-            <BootstrapTable
-                striped
-                hover
-                keyField='id'
-                data={data}
-                columns={columns}/>
+        <div>
+            {!!data.length ?
+                (<div className="container" style={{marginTop: 50}}>
+                    <BootstrapTable
+                        striped
+                        hover
+                        keyField='id'
+                        data={data}
+                        columns={columns}/>
+                </div>)
+                : <div/>}
         </div>
     );
 }
