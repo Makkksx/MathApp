@@ -98,7 +98,6 @@ public class TaskController {
         System.out.println("getTask");
         try {
             firebaseService.getDecodedToken(request);
-            System.out.println(taskService.findById(taskId));
             return new ResponseEntity<>(taskService.findById(taskId), HttpStatus.OK);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
