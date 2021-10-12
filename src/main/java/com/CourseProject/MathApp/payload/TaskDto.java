@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Data
 public class TaskDto {
+    private Long id;
     @NotBlank
     private String title;
     @NotBlank

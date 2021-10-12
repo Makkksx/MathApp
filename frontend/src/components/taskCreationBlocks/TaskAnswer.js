@@ -47,16 +47,16 @@ export default function TaskAnswer({getAnswer}) {
                         </Col>
                         <Col md={2}>
                             <ButtonGroup>
-                            <Button
-                                variant="secondary"
-                                onClick={() => handleRemoveFields(index)}>
-                                -
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                onClick={() => handleAddFields()}>
-                                +
-                            </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleRemoveFields(index)}>
+                                    -
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleAddFields()}>
+                                    +
+                                </Button>
                             </ButtonGroup>
                         </Col>
                     </Row>

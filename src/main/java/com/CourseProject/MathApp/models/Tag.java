@@ -30,7 +30,7 @@ public class Tag {
 
     }
 
-    public void incCount(){
+    public void incCount() {
         count++;
     }
 

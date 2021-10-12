@@ -9,10 +9,8 @@ import com.CourseProject.MathApp.repo.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -20,6 +18,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper mapper = new TaskMapperImpl();
     private final TaskRepository taskRepository;
     private final TagServiceImpl tagService;
+
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository, TagServiceImpl tagService) {
         this.taskRepository = taskRepository;
@@ -34,12 +33,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskDto findById(Long id) {
+        return mapper.toDto(taskRepository.findById(id).orElse(null));
+    }
+
+    @Override
     public List<TaskDto> getAllTasks() {
-        List<TaskDto> taskDTOList = new ArrayList<>();
-        List<Task> taskList = taskRepository.findAll();
-        for (Task task : taskList) {
-            taskDTOList.add(mapper.toDto(task));
-        }
-        return taskDTOList;
+        return mapper.toDtoList(taskRepository.findAll());
     }
 }

@@ -2,7 +2,6 @@ package com.CourseProject.MathApp.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -29,11 +28,7 @@ public class User {
     private int solvedTasks;
     private int createdTasks;
     private Role role;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_tasks",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id")
-    )
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<Task> tasks;
 
     public User(String uid, String username, String email, String provider) {
@@ -48,5 +43,19 @@ public class User {
 
     public User() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", uid='" + uid + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", provider='" + provider + '\'' +
+                ", solvedTasks=" + solvedTasks +
+                ", createdTasks=" + createdTasks +
+                ", role=" + role +
+                '}';
     }
 }

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {LinkContainer} from 'react-router-bootstrap'
 import {getAuth} from "firebase/auth";
-import {AuthContext} from "../service/auth";
+import {AuthContext} from "../service/Auth";
 import {useAlert} from "react-alert";
 
 export default function NaviBar() {
@@ -18,24 +18,23 @@ export default function NaviBar() {
                     }
                 })
                 .catch((error) => {
-                    alert.show("Bad token", {timeout: 2000,type: 'error'})
+                    alert.show("Bad token", {timeout: 2000, type: 'error'})
                     console.log(error);
                 })
-        }else{
+        } else {
             setAdmin(false)
         }
     }, [currentUser, admin, alert]);
 
     const handleLogout = () => {
-        getAuth().signOut();
-        window.location.href = '/home';
+        getAuth().signOut().then(() => window.location.href = '/home');
     }
 
     return (
         <>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <LinkContainer to="/home">
+                    <LinkContainer to="/">
                         <Navbar.Brand>MathApp</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -48,8 +47,8 @@ export default function NaviBar() {
                                 <Nav.Link>Admin</Nav.Link>
                             </LinkContainer>) : (<div/>)
                             }
-                            {currentUser ? (<LinkContainer to="/task">
-                                <Nav.Link>Task</Nav.Link>
+                            {currentUser ? (<LinkContainer to="/createTask">
+                                <Nav.Link>Create task</Nav.Link>
                             </LinkContainer>) : (<div/>)}
                         </Nav>
                         <Nav>
@@ -58,12 +57,12 @@ export default function NaviBar() {
                                     <LinkContainer to={"/profile/" + currentUser.uid}>
                                         <button className="btn btn-primary" type="submit">Profile</button>
                                     </LinkContainer>
-                                    <button className="btn btn-primary" onClick={() => handleLogout()}
+                                    <button className="btn btn-primary mx-2" onClick={() => handleLogout()}
                                             type="submit">Sign-out
                                     </button>
                                 </>
                             ) : (<LinkContainer to="/login">
-                                <button className="btn btn-primary" type="submit">Sign-up</button>
+                                <button className="btn btn-primary mx-2" type="submit">Sign-up</button>
                             </LinkContainer>)}
                         </Nav>
                     </Navbar.Collapse>

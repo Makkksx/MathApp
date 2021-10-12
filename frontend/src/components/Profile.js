@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../service/auth";
-import {Redirect, useParams} from "react-router-dom";
+import {AuthContext} from "../service/Auth";
+import {useParams} from "react-router-dom";
 import axios from "axios";
 import {API_BASE_URL} from "../constants";
-import {getAuth} from "firebase/auth";
-import firebase from "../config/FirebaseConfig";
 import {useAlert} from "react-alert";
+import {Card, Container, ListGroup} from "react-bootstrap";
+import TasksTable from "./ProfileBlocks/TasksTable";
 
-const auth = getAuth(firebase);
 export default function Profile() {
     const {currentUser} = useContext(AuthContext);
     const [profileData, setProfileData] = useState([]);
@@ -15,7 +14,7 @@ export default function Profile() {
     const alert = useAlert()
     useEffect(() => {
         async function fetchData() {
-            await auth.currentUser.getIdToken(true).then(async (idToken) => {
+            await currentUser.getIdToken(true).then(async (idToken) => {
                 await axios.get(API_BASE_URL + "/admin/getProfile", {
                     headers: {
                         "Content-Type": "application/json",
@@ -32,30 +31,35 @@ export default function Profile() {
                         console.log(error);
                     });
             }).catch((error) => {
-                alert.show("Bad token", {timeout: 2000,type: 'error'})
+                alert.show("Bad token", {timeout: 2000, type: 'error'})
                 console.log(error)
             });
         }
 
-        fetchData().catch((error) =>{
+        fetchData().catch((error) => {
             console.log(error)
         })
 
-    }, [uid, alert]);
-    // с privateroute убрать
-    if (!currentUser) {
-        return <Redirect to="/"/>;
-    }
+    }, [uid, currentUser, alert]);
     if (!profileData) {
         return <p>User not found</p>;
     }
     return (
-        <div>
-            <p>11111111111</p>
-            <p>{profileData.username}</p>
-            <p>{profileData.createdTasks}</p>
-            <p>{profileData.solvedTasks}</p>
-            <p>{profileData.provider}</p>
-        </div>
+        <Container className={"mt-2"}>
+            <Card>
+                <Card.Header>
+                    <Card.Title as={"h2"}>
+                        {profileData.username}
+                    </Card.Title>
+                </Card.Header>
+                <Card.Body>
+                    <ListGroup variant="flush">
+                        <ListGroup.Item as={"h5"}>Number of tasks created: {profileData.createdTasks}</ListGroup.Item>
+                        <ListGroup.Item as={"h5"}>Number of solved tasks: {profileData.solvedTasks}</ListGroup.Item>
+                    </ListGroup>
+                </Card.Body>
+            </Card>
+            {profileData.uid ? (<TasksTable uid={profileData.uid}/>) : <>Loading...</>}
+        </Container>
     );
 }

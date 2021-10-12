@@ -13,7 +13,6 @@ export default function TaskCondition({getCondition}) {
                 value={condition}
                 onChange={setCondition}
             />
-            {/*<MDEditor.Markdown source={value}/>*/}
         </div>
     );
 }

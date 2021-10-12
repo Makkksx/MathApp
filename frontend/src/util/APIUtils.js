@@ -1,21 +1,26 @@
-// import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
-//
-// const storage = getStorage();
-//
-// export async function UploadFiles(user, type, file) {
-//     const uploadRef = ref(storage, `/${user}/${type}/${file.name}`);
-//     const uploadTask = uploadBytesResumable(uploadRef, file);
-//     uploadTask.on(
-//         "state_changed",
-//         () => {
-//             // alert.show("Success", {timeout: 2000, type: 'success'})
-//         },
-//         (error) => {
-//             // alert.show("Uploading interrupted", {timeout: 2000, type: 'error'})
-//             console.log(error)
-//         }
-//     );
-//     return getDownloadURL(uploadTask.snapshot.ref)
-//
-// }
-//
+import {getDownloadURL, getStorage, ref} from "firebase/storage";
+import axios from "axios";
+import {getAuth} from "firebase/auth";
+import firebase from "../config/FirebaseConfig";
+
+const storage = getStorage();
+const auth = getAuth(firebase);
+
+export const getURLData = (url) =>
+    new Promise((resolve, reject) => {
+        getDownloadURL(ref(storage, url))
+            .then((url) => {
+                auth.currentUser.getIdToken(true).then(async () => {
+                    await axios.get(url)
+                        .then(response => {
+                            resolve(response.data);
+                        }).catch((error) => {
+                            reject(new Error("No access!"))
+                            console.log(error);
+                        });
+                }).catch((error) => {
+                    reject(new Error("Bad token"))
+                    console.log(error)
+                });
+            })
+    });

@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/task")
 @CrossOrigin
 public class TaskController {
     private final FirebaseService firebaseService;
-    private final TaskMapper mapper = new TaskMapperImpl();
+    private final TaskMapper taskMapper = new TaskMapperImpl();
     private final TaskServiceImpl taskService;
     private final UserServiceImpl userService;
     private final TagServiceImpl tagService;
@@ -55,7 +56,7 @@ public class TaskController {
                 user.setCreatedTasks(user.getCreatedTasks() + 1);
                 taskDto.setOwner(user);
                 System.out.println(taskDto.getTags());
-                Task task = mapper.fromDto(taskDto);
+                Task task = taskMapper.fromDto(taskDto);
                 System.out.println(task.toString());
                 userService.saveUser(user);
                 taskService.saveTask(task);
@@ -68,11 +69,37 @@ public class TaskController {
     }
 
     @GetMapping("/getAllTasks")
-    public ResponseEntity<?> getTasks(HttpServletRequest request) throws FirebaseAuthException {
+    public ResponseEntity<?> getTasks() {
         System.out.println("getAllTasks");
+        return new ResponseEntity<>(taskService.getAllTasks(), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/getUserTasks")
+    public ResponseEntity<?> getUserTasks(@RequestParam(value = "uid") String uid, HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("getUserTasks");
         try {
             firebaseService.getDecodedToken(request);
-            return new ResponseEntity<>(taskService.getAllTasks(), HttpStatus.OK);
+            User user = userService.findFirstByUid(uid).orElse(null);
+            if (user != null) {
+                return new ResponseEntity<>(taskMapper.toDtoList(new ArrayList<>(user.getTasks())), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/getTask")
+    public ResponseEntity<?> getTask(@RequestParam(value = "taskId") Long taskId, HttpServletRequest request)
+            throws FirebaseAuthException {
+        System.out.println("getTask");
+        try {
+            firebaseService.getDecodedToken(request);
+            System.out.println(taskService.findById(taskId));
+            return new ResponseEntity<>(taskService.findById(taskId), HttpStatus.OK);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -92,15 +119,10 @@ public class TaskController {
     }
 
     @GetMapping("/getAllTags")
-    public ResponseEntity<?> getTags(HttpServletRequest request) throws FirebaseAuthException {
+    public ResponseEntity<?> getTags() {
         System.out.println("getAllTags");
-        try {
-            firebaseService.getDecodedToken(request);
-            return new ResponseEntity<>(tagService.getAllTags(), HttpStatus.OK);
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        return new ResponseEntity<>(tagService.getAllTags(), HttpStatus.OK);
+
     }
 
     @GetMapping("/getAllThemes")

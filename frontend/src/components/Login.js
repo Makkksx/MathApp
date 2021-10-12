@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {facebookProvider, githubProvider, googleProvider} from "../config/AuthMethods";
-import {AuthContext} from "../service/auth";
+import {AuthContext} from "../service/Auth";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
 import {API_BASE_URL} from "../constants";
@@ -14,20 +14,18 @@ export const Login = () => {
     const {currentUser} = useContext(AuthContext);
     const handleOnClick = async (provider) => {
         await signInWithPopup(auth, provider);
-        // await socialMediaAuth(provider);
-        console.log(provider)
         await auth.currentUser.getIdToken(true).then((idToken) => {
-            axios.post(API_BASE_URL + "/auth/login", {},{
+            axios.post(API_BASE_URL + "/auth/login", {}, {
                 headers: {
                     "Content-Type": "application/json",
                     idToken: idToken,
                 },
-            }).catch((error) =>{
-                alert.show("No access!", {timeout: 2000,type: 'error'})
+            }).catch((error) => {
+                alert.show("No access!", {timeout: 2000, type: 'error'})
                 console.log(error)
             });
-        }).catch((error) =>{
-            alert.show("Bad token", {timeout: 2000,type: 'error'})
+        }).catch((error) => {
+            alert.show("Bad token", {timeout: 2000, type: 'error'})
             console.log(error)
         });
     };

@@ -15,6 +15,7 @@ public class FirebaseService {
     public FirebaseToken getDecodedToken(HttpServletRequest request) throws FirebaseAuthException {
         return FirebaseAuth.getInstance().verifyIdToken(request.getHeader("idToken"));
     }
+
     public Bucket getStorage() {
         return StorageClient.getInstance().bucket();
     }

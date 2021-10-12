@@ -4,10 +4,11 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {Home} from "./components/Home";
 import {Admin} from "./components/Admin";
 import {Login} from "./components/Login";
-// import PrivateRoute from "./common/PrivateRoute";
-import {AuthProvider} from "./service/auth";
+import {AuthProvider} from "./service/Auth";
 import Profile from "./components/Profile";
-import {Task} from "./components/Task";
+import {TaskCreation} from "./components/TaskCreation";
+import Task from "./components/Task";
+import PrivateRoute from "./common/PrivateRoute";
 
 function App() {
     return (
@@ -16,11 +17,12 @@ function App() {
                 <NaviBar/>
                 <Switch>
                     <Route exact path="/home" component={Home}/>
-                    {/*<PrivateRoute  exact path="/admin" component={Admin}/>*/}
-                    <Route exact path="/admin" component={Admin}/>
+                    <Route exact path="/" component={Home}/>
+                    <PrivateRoute exact path="/admin" component={Admin}/>
                     <Route exact path="/login" component={Login}/>
-                    <Route exact path="/task" component={Task}/>
+                    <PrivateRoute exact path="/createTask" component={TaskCreation}/>
                     <Route exact path="/profile/:uid" component={Profile}/>
+                    <Route exact path="/task/:taskId" component={Task}/>
                 </Switch>
             </BrowserRouter>
         </AuthProvider>

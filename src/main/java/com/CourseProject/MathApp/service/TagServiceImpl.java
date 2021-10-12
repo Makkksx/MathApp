@@ -14,6 +14,7 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagMapper mapper = new TagMapperImpl();
+
     public TagServiceImpl(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }

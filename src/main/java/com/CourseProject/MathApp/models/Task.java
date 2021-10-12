@@ -2,7 +2,6 @@ package com.CourseProject.MathApp.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +10,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "tasks_table")
 public class Task {
@@ -40,6 +38,10 @@ public class Task {
     )
     private Set<String> answers = new HashSet<>();
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_tasks",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private User owner;
 
     public Task(String title, Theme theme, String conditionURL, Set<Tag> tags, Set<String> images,
@@ -55,6 +57,18 @@ public class Task {
 
     public Task() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", theme=" + theme +
+                ", conditionURL='" + conditionURL + '\'' +
+                ", images=" + images +
+                ", answers=" + answers +
+                '}';
     }
 
 }

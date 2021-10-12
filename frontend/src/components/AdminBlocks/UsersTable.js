@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import {API_BASE_URL} from "../../constants";
 import axios from "axios";
-import {getAuth} from "firebase/auth";
-import firebase from "../../config/FirebaseConfig";
 import {useAlert} from "react-alert";
-
-const auth = getAuth(firebase);
+import {AuthContext} from "../../service/Auth";
 
 export default function UsersTable() {
+    const {currentUser} = useContext(AuthContext);
     const [data, setData] = useState([]);
     const alert = useAlert()
     const columns = [
@@ -41,8 +39,8 @@ export default function UsersTable() {
     }
 
     useEffect(() => {
-        if (auth.currentUser) {
-            auth.currentUser.getIdToken(true).then(async (idToken) => {
+        if (currentUser) {
+            currentUser.getIdToken(true).then(async (idToken) => {
                 await axios.get(API_BASE_URL + "/admin/getAll", {
                     headers: {
                         "Content-Type": "application/json",
@@ -62,7 +60,7 @@ export default function UsersTable() {
         } else {
             alert.show("Please login to view", {timeout: 2000, type: 'error'})
         }
-    }, [alert]);
+    }, [alert, currentUser]);
 
     return (
         <div className="container" style={{marginTop: 50}}>
