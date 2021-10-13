@@ -3,8 +3,10 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import axios from "axios";
 import {useAlert} from "react-alert";
 import {AuthContext} from "../../service/Auth";
+import {useHistory} from "react-router-dom";
 
 export default function TasksTable(uid) {
+    let history = useHistory();
     const {currentUser} = useContext(AuthContext);
     const [data, setData] = useState([]);
     const alert = useAlert()
@@ -54,7 +56,11 @@ export default function TasksTable(uid) {
         })
 
     }, [uid, alert, currentUser]);
-
+    const rowEvents = {
+        onClick: (e, row, rowIndex) => {
+            history.push('/task/' + row.id)
+        }
+    }
 
     return (
         <div>
@@ -65,7 +71,8 @@ export default function TasksTable(uid) {
                         hover
                         keyField='id'
                         data={data}
-                        columns={columns}/>
+                        columns={columns}
+                        rowEvents={rowEvents}/>
                 </div>)
                 : <div/>}
         </div>

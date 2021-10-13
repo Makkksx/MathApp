@@ -3,11 +3,13 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import axios from "axios";
 import {useAlert} from "react-alert";
 import {AuthContext} from "../../service/Auth";
+import {useHistory} from "react-router-dom";
 
 export default function UsersTable() {
     const {currentUser} = useContext(AuthContext);
     const [data, setData] = useState([]);
     const alert = useAlert()
+    let history = useHistory();
     const columns = [
         {
             dataField: "uid",
@@ -32,8 +34,7 @@ export default function UsersTable() {
     ];
     const rowEvents = {
         onClick: (e, row, rowIndex) => {
-            console.log(row)
-            window.location.href = '/profile/' + row.uid
+            history.push('/profile/' + row.uid)
         }
     }
 

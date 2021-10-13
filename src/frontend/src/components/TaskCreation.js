@@ -8,9 +8,11 @@ import TaskHead from "./taskCreationBlocks/TaskHead";
 import TaskAnswer from "./taskCreationBlocks/TaskAnswer";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import axios from "axios";
+import {useHistory} from "react-router-dom";
 
 const storage = getStorage();
 export const TaskCreation = () => {
+    let history = useHistory();
     const date = new Date().getTime();
     const {currentUser} = useContext(AuthContext);
     const [title, setTitle] = useState("");
@@ -96,7 +98,7 @@ export const TaskCreation = () => {
                     idToken: idToken,
                 },
             }).then(() => {
-                window.location.href = '/home'
+                history.push('/home')
                 alert.show("Successfully created!", {timeout: 2000, type: 'error'})
             }).catch((error) => {
                 alert.show("No access!", {timeout: 2000, type: 'error'})

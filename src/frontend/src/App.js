@@ -1,6 +1,6 @@
 import React from 'react';
 import NaviBar from "./components/NaviBar";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {HashRouter, Route, Switch} from "react-router-dom";
 import {Home} from "./components/Home";
 import {Admin} from "./components/Admin";
 import {Login} from "./components/Login";
@@ -13,7 +13,7 @@ import PrivateRoute from "./common/PrivateRoute";
 function App() {
     return (
         <AuthProvider>
-            <BrowserRouter>
+            <HashRouter>
                 <NaviBar/>
                 <Switch>
                     <Route exact path="/home" component={Home}/>
@@ -24,7 +24,7 @@ function App() {
                     <Route exact path="/profile/:uid" component={Profile}/>
                     <Route exact path="/task/:taskId" component={Task}/>
                 </Switch>
-            </BrowserRouter>
+            </HashRouter>
         </AuthProvider>
     );
 }

@@ -4,8 +4,10 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {getAuth} from "firebase/auth";
 import {AuthContext} from "../service/Auth";
 import {useAlert} from "react-alert";
+import {useHistory} from "react-router-dom";
 
 export default function NaviBar() {
+    let history = useHistory();
     const {currentUser} = useContext(AuthContext);
     const [admin, setAdmin] = useState(false);
     const alert = useAlert()
@@ -27,7 +29,7 @@ export default function NaviBar() {
     }, [currentUser, admin, alert]);
 
     const handleLogout = () => {
-        getAuth().signOut().then(() => window.location.href = '/home');
+        getAuth().signOut().then(() => history.push('/home'));
     }
 
     return (
