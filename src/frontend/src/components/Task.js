@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {useAlert} from "react-alert";
@@ -6,6 +6,7 @@ import {getURLData} from "../util/APIUtils";
 import MDEditor from "@uiw/react-md-editor";
 import {Badge, Card, Col, Container, Image, ListGroup, ListGroupItem, Row} from "react-bootstrap";
 import {AuthContext} from "../service/Auth";
+import TaskAnswerChecker from "./TaskBlocks/TaskAnswerChecker";
 
 export default function Task() {
     const {currentUser} = useContext(AuthContext);
@@ -15,6 +16,10 @@ export default function Task() {
     const [tags, setTags] = useState([]);
     const {taskId} = useParams();
     const alert = useAlert()
+    const [solved, setSolved] = useState(false);
+    const getSolved = useCallback((solved) => {
+        setSolved(solved)
+    }, []);
     useEffect(() => {
         async function fetchData() {
             await currentUser.getIdToken(true).then(async (idToken) => {
@@ -38,6 +43,23 @@ export default function Task() {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
                     });
+                await axios.get("/task/checkSolvedTask", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        idToken: idToken,
+                    },
+                    params: {
+                        taskId: taskId
+                    },
+                })
+                    .then((response) => {
+                        setSolved(response.data)
+                    })
+                    .catch((error) => {
+                        alert.show("No access!", {timeout: 2000, type: 'error'})
+                        console.log(error);
+                    });
+
             }).catch((error) => {
                 alert.show("Bad token", {timeout: 2000, type: 'error'})
                 console.log(error)
@@ -48,7 +70,8 @@ export default function Task() {
             console.log(error)
         })
 
-    }, [taskId, alert, currentUser]);
+    }, [alert, currentUser, taskId]);
+
     return (
         <Container className=" mt-2 mx-auto text-center">
             <Card>
@@ -72,15 +95,15 @@ export default function Task() {
                             <Row>
                                 {images.map((image, index) => (
                                     <Col key={index}>
-                                        <Image src={image} rounded height={"30%"}/>
+                                        <Image src={image} rounded width={"30%"}/>
                                     </Col>
                                 ))}
                             </Row>
                         </ListGroupItem>
                     </ListGroup>
                 </Card.Body>
-                {/*<Card.Text>*/}
-                {/*</Card.Text>*/}
+                <TaskAnswerChecker taskId={taskData.id} answers={taskData.answers} solved={solved}
+                                   getSolved={getSolved}/>
             </Card>
         </Container>
     );

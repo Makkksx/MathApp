@@ -99,7 +99,7 @@ export const TaskCreation = () => {
                 },
             }).then(() => {
                 history.push('/home')
-                alert.show("Successfully created!", {timeout: 2000, type: 'error'})
+                alert.show("Successfully created!", {timeout: 2000, type: 'success'})
             }).catch((error) => {
                 alert.show("No access!", {timeout: 2000, type: 'error'})
                 console.log(error)

@@ -77,7 +77,7 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
     return (
         <Stack gap={3} className="container mt-2 mx-auto">
             <Form.Group>
-                <Form.Label><h4>Choose title</h4></Form.Label>
+                <Form.Label as={"h4"}>Choose title</Form.Label>
                 <Form.Control required
                               type="text"
                               placeholder="Choose a title..."
@@ -91,14 +91,14 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
                 </Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
-                <Form.Label><h4>Chose theme</h4></Form.Label>
+                <Form.Label as={"h4"}>Chose theme</Form.Label>
                 <Select value={theme} options={themeOptions} onChange={event => {
                     setTheme(event.target.value)
                 }}/>
                 <Form.Control.Feedback type="invalid">Please choose a theme.</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
-                <Form.Label><h4>Choose tags</h4></Form.Label>
+                <Form.Label as={"h4"}>Choose tags</Form.Label>
                 <Typeahead
                     clearButton
                     allowNew

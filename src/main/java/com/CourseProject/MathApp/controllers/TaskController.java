@@ -50,10 +50,8 @@ public class TaskController {
         try {
             FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
             User user = userService.findFirstByUid(decodedToken.getUid()).orElse(null);
-            if (user == null) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            } else {
-                user.setCreatedTasks(user.getCreatedTasks() + 1);
+            if (user != null) {
+                user.incCreatedTasks();
                 taskDto.setOwner(user);
                 System.out.println(taskDto.getTags());
                 Task task = taskMapper.fromDto(taskDto);
@@ -64,8 +62,8 @@ public class TaskController {
             }
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/getAllTasks")
@@ -83,13 +81,11 @@ public class TaskController {
             User user = userService.findFirstByUid(uid).orElse(null);
             if (user != null) {
                 return new ResponseEntity<>(taskMapper.toDtoList(new ArrayList<>(user.getTasks())), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/getTask")
@@ -136,4 +132,36 @@ public class TaskController {
         }
     }
 
+    @PostMapping("/currentAnswer")
+    public ResponseEntity<?> currentAnswer(@RequestBody Long taskId, HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("currentAnswer");
+        try {
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            User user = userService.findFirstByUid(decodedToken.getUid()).orElse(null);
+            if (user != null) {
+                user.addCurrentTask(taskId);
+                user.incSolvedTasks();
+                userService.saveUser(user);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/checkSolvedTask")
+    public ResponseEntity<?> checkAnswer(@RequestParam(value = "taskId") String taskId, HttpServletRequest request) {
+        System.out.println("checkSolvedTask");
+        try {
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            User user = userService.findFirstByUid(decodedToken.getUid()).orElse(null);
+            if (user != null) {
+                return new ResponseEntity<>(user.checkCurrentTask(Long.valueOf(taskId)), HttpStatus.OK);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
 }

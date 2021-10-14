@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -30,6 +31,11 @@ public class User {
     private Role role;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<Task> tasks;
+    @ElementCollection
+    @CollectionTable(name = "user_current_tasks",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<Long> currentTasks = new HashSet<>();
 
     public User(String uid, String username, String email, String provider) {
         this.uid = uid;
@@ -43,6 +49,22 @@ public class User {
 
     public User() {
 
+    }
+
+    public void addCurrentTask(Long taskId) {
+        currentTasks.add(taskId);
+    }
+
+    public void incSolvedTasks() {
+        solvedTasks++;
+    }
+
+    public void incCreatedTasks() {
+        createdTasks++;
+    }
+
+    public boolean checkCurrentTask(Long taskId) {
+        return currentTasks.contains(taskId);
     }
 
     @Override
