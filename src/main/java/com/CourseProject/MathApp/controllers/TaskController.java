@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/task")
@@ -57,6 +58,7 @@ public class TaskController {
                 Task task = taskMapper.fromDto(taskDto);
                 System.out.println(task.toString());
                 userService.saveUser(user);
+                task.setTags(new HashSet<>(tagService.saveTags(task.getTags())));
                 taskService.saveTask(task);
                 return new ResponseEntity<>(HttpStatus.OK);
             }
