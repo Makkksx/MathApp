@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -26,15 +27,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task saveTask(Task task) {
+    public void saveTask(Task task) {
         List<Tag> tags = tagService.saveTags(task.getTags());
         task.setTags(new HashSet<>(tags));
-        return taskRepository.save(task);
+        taskRepository.save(task);
     }
 
     @Override
     public TaskDto findById(Long id) {
         return mapper.toDto(taskRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public Optional<Task> findTaskById(Long id) {
+        return taskRepository.findById(id);
     }
 
     @Override

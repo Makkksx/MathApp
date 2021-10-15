@@ -43,7 +43,13 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private User owner;
+    private float rating = 0;
+    private int ratingCount = 0;
 
+    public void addRating(int rating){
+//        ratingCount++;
+        this.rating = (this.rating * this.ratingCount + rating) / (++this.ratingCount);
+    }
     public Task(String title, Theme theme, String conditionURL, Set<Tag> tags, Set<String> images,
                 Set<String> answers, User owner) {
         this.title = title;

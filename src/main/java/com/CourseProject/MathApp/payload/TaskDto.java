@@ -22,5 +22,7 @@ public class TaskDto {
     @NotBlank
     private Set<String> answers;
     private User owner;
+    @NotBlank
+    private float rating;
 
 }

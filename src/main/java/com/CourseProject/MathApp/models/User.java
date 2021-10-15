@@ -36,6 +36,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id")
     )
     private Set<Long> currentTasks = new HashSet<>();
+    @ElementCollection
+    @CollectionTable(name = "user_rated_tasks",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<Long> ratedTasks = new HashSet<>();
 
     public User(String uid, String username, String email, String provider) {
         this.uid = uid;
@@ -55,16 +60,23 @@ public class User {
         currentTasks.add(taskId);
     }
 
+    public void AddRatedTask(Long taskId) {
+        ratedTasks.add(taskId);
+    }
+
     public void incSolvedTasks() {
-        solvedTasks++;
+        this.solvedTasks++;
     }
 
     public void incCreatedTasks() {
-        createdTasks++;
+        this.createdTasks++;
     }
 
     public boolean checkCurrentTask(Long taskId) {
         return currentTasks.contains(taskId);
+    }
+    public boolean checkTaskRated(Long taskId) {
+        return ratedTasks.contains(taskId);
     }
 
     @Override
@@ -80,4 +92,5 @@ public class User {
                 ", role=" + role +
                 '}';
     }
+
 }

@@ -164,4 +164,43 @@ public class TaskController {
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
+    @PostMapping("/addRating")
+    public ResponseEntity<?> addRating(@RequestParam(value = "taskId") String taskId,
+                                       @RequestParam(value = "rating") String rating,
+                                       HttpServletRequest request) throws FirebaseAuthException {
+        System.out.println("addRating");
+        try {
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            Task task = taskService.findTaskById(Long.valueOf(taskId)).orElse(null);
+            User user = userService.findFirstByUid(decodedToken.getUid()).orElse(null);
+            if (task == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else if (user != null) {
+                task.addRating(Integer.parseInt(rating));
+                user.AddRatedTask(Long.valueOf(taskId));
+                userService.saveUser(user);
+                taskService.saveTask(task);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/checkTaskRated")
+    public ResponseEntity<?> checkRated(@RequestParam(value = "taskId") String taskId, HttpServletRequest request) {
+        System.out.println("checkTaskRated");
+        try {
+            FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
+            User user = userService.findFirstByUid(decodedToken.getUid()).orElse(null);
+            if (user != null) {
+                return new ResponseEntity<>(user.checkTaskRated(Long.valueOf(taskId)), HttpStatus.OK);
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
 }

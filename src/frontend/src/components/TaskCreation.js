@@ -1,11 +1,11 @@
 import React, {useCallback, useContext, useState} from "react";
 import {Button, Form} from "react-bootstrap";
-import DropPlace from "./taskCreationBlocks/DropPlace";
-import TaskCondition from "./taskCreationBlocks/TaskCondition";
+import DropPlace from "./TaskCreationBlocks/DropPlace";
+import TaskCondition from "./TaskCreationBlocks/TaskCondition";
 import {AuthContext} from "../service/Auth";
 import {useAlert} from "react-alert";
-import TaskHead from "./taskCreationBlocks/TaskHead";
-import TaskAnswer from "./taskCreationBlocks/TaskAnswer";
+import TaskHead from "./TaskCreationBlocks/TaskHead";
+import TaskAnswer from "./TaskCreationBlocks/TaskAnswer";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import axios from "axios";
 import {useHistory} from "react-router-dom";

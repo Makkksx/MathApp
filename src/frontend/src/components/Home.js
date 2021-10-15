@@ -1,6 +1,6 @@
 import React from "react";
-import HomeTagCloud from "./homeBlocks/HomeTagCloud";
-import HomeTasks from "./homeBlocks/HomeTasks";
+import HomeTagCloud from "./HomeBlocks/HomeTagCloud";
+import HomeTasks from "./HomeBlocks/HomeTasks";
 
 export const Home = () => {
     return (

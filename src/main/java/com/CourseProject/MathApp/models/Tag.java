@@ -31,7 +31,7 @@ public class Tag {
     }
 
     public void incCount() {
-        count++;
+        this.count++;
     }
 
     @Override
