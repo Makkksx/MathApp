@@ -7,7 +7,7 @@ import MDEditor from "@uiw/react-md-editor";
 import {Badge, Card, Col, Container, Image, ListGroup, ListGroupItem, Row} from "react-bootstrap";
 import {AuthContext} from "../service/Auth";
 import TaskAnswerChecker from "./TaskBlocks/TaskAnswerChecker";
-import {Rating} from "react-simple-star-rating";
+import {Rating, RatingView} from "react-simple-star-rating";
 
 export default function Task() {
     const [rating, setRating] = useState(0)
@@ -129,7 +129,8 @@ export default function Task() {
                     <Card.Title as={"h2"}>
                         {taskData.title}
                     </Card.Title>
-                    <Rating onClick={handleRating} ratingValue={rating}/>
+                    {!ratingSend ? (<Rating onClick={handleRating} ratingValue={rating}/>) : (
+                        <RatingView ratingValue={rating}/>)}
                     <Card.Subtitle className="text-muted">
                         {taskData.theme}
                     </Card.Subtitle>

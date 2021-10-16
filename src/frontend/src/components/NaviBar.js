@@ -5,6 +5,7 @@ import {getAuth} from "firebase/auth";
 import {AuthContext} from "../service/Auth";
 import {useAlert} from "react-alert";
 import {useHistory} from "react-router-dom";
+import {DarkMode} from "../DarkMode";
 
 export default function NaviBar() {
     let history = useHistory();
@@ -31,6 +32,7 @@ export default function NaviBar() {
     const handleLogout = () => {
         getAuth().signOut().then(() => history.push('/home'));
     }
+
 
     return (
         <>
@@ -69,6 +71,7 @@ export default function NaviBar() {
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
+                <DarkMode/>
             </Navbar>
         </>
     )

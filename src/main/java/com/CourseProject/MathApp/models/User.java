@@ -41,7 +41,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id")
     )
     private Set<Long> ratedTasks = new HashSet<>();
-
+    private boolean darkMode = false;
+    public void changeDarkMode(){
+        this.darkMode = !this.darkMode;
+    }
     public User(String uid, String username, String email, String provider) {
         this.uid = uid;
         this.username = username;
@@ -75,6 +78,7 @@ public class User {
     public boolean checkCurrentTask(Long taskId) {
         return currentTasks.contains(taskId);
     }
+
     public boolean checkTaskRated(Long taskId) {
         return ratedTasks.contains(taskId);
     }
