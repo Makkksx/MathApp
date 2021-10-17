@@ -44,7 +44,7 @@ export default function DropPlace({getImages}) {
     const {
         acceptedFiles, fileRejections, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject
     } = useDropzone({
-        maxFiles: 2,
+        maxFiles: 3,
         validator: typeValidator
     });
     const accFiles = acceptedFiles.map(file => (

@@ -4,12 +4,18 @@ import axios from "axios";
 import {useAlert} from "react-alert";
 import {AuthContext} from "../../service/Auth";
 import {useHistory} from "react-router-dom";
+import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
+import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import {Button, Modal} from "react-bootstrap";
 
 export default function TasksTable(uid) {
     let history = useHistory();
     const {currentUser} = useContext(AuthContext);
     const [data, setData] = useState([]);
     const alert = useAlert()
+    const [showDanger, setShowDanger] = useState(false);
     const columns = [
         {
             dataField: "id",
@@ -19,12 +25,14 @@ export default function TasksTable(uid) {
         {
             dataField: "title",
             text: "Title",
-            sort: true
+            sort: true,
+            filter: textFilter()
         },
         {
             dataField: "theme",
             text: "Theme",
-            sort: true
+            sort: true,
+            filter: textFilter()
         }
     ];
     useEffect(() => {
@@ -56,23 +64,44 @@ export default function TasksTable(uid) {
         })
 
     }, [uid, alert, currentUser]);
-    const rowEvents = {
-        onClick: (e, row, rowIndex) => {
-            history.push('/task/' + row.id)
-        }
-    }
 
+    const expandRow = {
+        renderer: row => (
+            <div>
+                <Button className={"mx-1"}>Edit</Button>
+                <Button className={"mx-1"} onClick={() => history.push('/task/' + row.id)}>View</Button>
+                <Button variant="danger" className={"mx-1"} onClick={()=>setShowDanger(true)}>Delete</Button>
+                <Modal show={showDanger} onHide={() => setShowDanger(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Delete task</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to delete the task?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowDanger(false)}>
+                            Close
+                        </Button>
+                        <Button variant="danger" onClick={() => setShowDanger(false)}>
+                            Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        ),
+    };
     return (
         <div>
             {!!data.length ?
-                (<div className="container" style={{marginTop: 50}}>
+                (<div className="container mt-5">
                     <BootstrapTable
                         striped
                         hover
                         keyField='id'
                         data={data}
                         columns={columns}
-                        rowEvents={rowEvents}/>
+                        // rowEvents={rowEvents}
+                        filter={filterFactory()}
+                        expandRow={expandRow}
+                        pagination={paginationFactory({sizePerPage: 5, hideSizePerPage: true})}/>
                 </div>)
                 : <div/>}
         </div>

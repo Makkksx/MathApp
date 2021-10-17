@@ -1,16 +1,15 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import axios from "axios";
 import {useAlert} from "react-alert";
 import {AuthContext} from "../../service/Auth";
 import {useHistory} from "react-router-dom";
-import {Pagination} from "react-bootstrap";
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
-let PageSize = 5;
 export default function UsersTable() {
     const {currentUser} = useContext(AuthContext);
     const [data, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
     const alert = useAlert()
     let history = useHistory();
     const columns = [
@@ -64,30 +63,16 @@ export default function UsersTable() {
             alert.show("Please login to view", {timeout: 2000, type: 'error'})
         }
     }, [alert, currentUser]);
-    const currentTableData = useMemo(() => {
-        const firstPageIndex = (currentPage - 1) * PageSize;
-        const lastPageIndex = firstPageIndex + PageSize;
-        return data.slice(firstPageIndex, lastPageIndex);
-    }, [currentPage, data]);
-    let items = [];
-    for (let number = 1; number <= (data.length / PageSize | 0); number++) {
-        items.push(
-            <Pagination.Item key={number} active={number === currentPage}
-                             onClick={() => setCurrentPage(number)}>
-                {number}
-            </Pagination.Item>,
-        );
-    }
     return (
-        <div className="container" style={{marginTop: 50}}>
+        <div className="container mt-5">
             <BootstrapTable
                 striped
                 hover
                 keyField='id'
-                data={currentTableData}
+                data={data}
                 columns={columns}
-                rowEvents={rowEvents}/>
-            <Pagination>{items}</Pagination>
+                rowEvents={rowEvents}
+                pagination={paginationFactory({sizePerPage: 5, hideSizePerPage: true})}/>
         </div>
     );
 }

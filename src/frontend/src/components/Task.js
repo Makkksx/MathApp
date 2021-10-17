@@ -148,7 +148,7 @@ export default function Task() {
                             <Row>
                                 {images.map((image, index) => (
                                     <Col key={index}>
-                                        <Image src={image} rounded width={"30%"}/>
+                                        <Image src={image} rounded width={"300"} />
                                     </Col>
                                 ))}
                             </Row>
