@@ -9,6 +9,7 @@ import Profile from "./components/Profile";
 import {TaskCreation} from "./components/TaskCreation";
 import Task from "./components/Task";
 import PrivateRoute from "./common/PrivateRoute";
+import TaskEdit from "./components/TaskEdit";
 
 function App() {
     return (
@@ -20,9 +21,10 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <PrivateRoute exact path="/admin" component={Admin}/>
                     <Route exact path="/login" component={Login}/>
-                    <PrivateRoute exact path="/createTask" component={TaskCreation}/>
+                    <PrivateRoute exact path="/task/create" component={TaskCreation}/>
                     <Route exact path="/profile/:uid" component={Profile}/>
                     <Route exact path="/task/:taskId" component={Task}/>
+                    <Route exact path="/task/:taskId/edit" component={TaskEdit}/>
                 </Switch>
             </HashRouter>
         </AuthProvider>

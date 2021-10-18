@@ -11,7 +11,7 @@ import axios from "axios";
 import {useHistory} from "react-router-dom";
 
 const storage = getStorage();
-export const TaskCreation = () => {
+export const TaskCreation = ({mode = "create"}) => {
     let history = useHistory();
     const date = new Date().getTime();
     const {currentUser} = useContext(AuthContext);
@@ -117,13 +117,17 @@ export const TaskCreation = () => {
             setValidated(true);
             event.stopPropagation();
         } else {
-            console.log("go")
             await uploadData();
         }
     }
+    const handleEdit = async (event) => {
+        event.preventDefault();
+        alert.show("Soon", {timeout: 2000, type: 'info'})
+    }
     return (
-        <Form className="col-md-6 mt-2 mx-auto" noValidate validated={validated} onSubmit={handleSubmit}>
-            <h2 className={"text-center"}>Create new task</h2>
+        <Form className="col-md-8 mt-2 mx-auto" noValidate validated={validated}
+              onSubmit={mode === "create" ? handleSubmit : handleEdit}>
+            <h2 className={"text-center"}>{mode === "create" ? ("Create new task") : ("Edit task")}</h2>
             <TaskHead getTitle={getTitle}
                       getTheme={getTheme}
                       getTags={getTags}/>
@@ -131,7 +135,7 @@ export const TaskCreation = () => {
             <TaskAnswer getAnswer={getAnswer}/>
             <DropPlace getImages={getImages}/>
             <div className="d-grid gap-2">
-                <Button variant="primary" size="lg" type="submit">Create</Button>
+                <Button variant="primary" size="lg" type="submit">{mode === "create" ? ("Create") : ("Edit")}</Button>
             </div>
         </Form>
     )

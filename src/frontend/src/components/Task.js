@@ -9,7 +9,7 @@ import {AuthContext} from "../service/Auth";
 import TaskAnswerChecker from "./TaskBlocks/TaskAnswerChecker";
 import {Rating, RatingView} from "react-simple-star-rating";
 
-export default function Task() {
+export default function Task({mode = "view"}) {
     const [rating, setRating] = useState(0)
     const [ratingSend, setRatingSend] = useState(false)
     const {currentUser} = useContext(AuthContext);
@@ -129,7 +129,7 @@ export default function Task() {
                     <Card.Title as={"h2"}>
                         {taskData.title}
                     </Card.Title>
-                    {!ratingSend ? (<Rating onClick={handleRating} ratingValue={rating}/>) : (
+                    {(!ratingSend && mode === "view") ? (<Rating onClick={handleRating} ratingValue={rating}/>) : (
                         <RatingView ratingValue={rating}/>)}
                     <Card.Subtitle className="text-muted">
                         {taskData.theme}
@@ -148,15 +148,25 @@ export default function Task() {
                             <Row>
                                 {images.map((image, index) => (
                                     <Col key={index}>
-                                        <Image src={image} rounded width={"300"} />
+                                        <Image src={image} rounded width={"300"}/>
                                     </Col>
                                 ))}
                             </Row>
                         </ListGroupItem>
                     </ListGroup>
                 </Card.Body>
-                <TaskAnswerChecker taskId={taskData.id} answers={taskData.answers} solved={solved}
-                                   getSolved={getSolved}/>
+                {mode === "edit" ? (
+                    <div>
+                        <h4>Answers:</h4>
+                        {!!taskData.answers ? taskData.answers.map((answer, index) => (
+                            <div key={index}>{answer}</div>
+                        )) :<div/>}
+                    </div>
+                    )
+                    :
+                    (<TaskAnswerChecker taskId={taskData.id} answers={taskData.answers} solved={solved}
+                                                          getSolved={getSolved}/>)}
+
             </Card>
         </Container>
     );

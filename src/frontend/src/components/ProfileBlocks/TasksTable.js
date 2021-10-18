@@ -68,7 +68,7 @@ export default function TasksTable(uid) {
     const expandRow = {
         renderer: row => (
             <div>
-                <Button className={"mx-1"}>Edit</Button>
+                <Button className={"mx-1"} onClick={() => history.push('/task/' + row.id + '/edit')}>Edit</Button>
                 <Button className={"mx-1"} onClick={() => history.push('/task/' + row.id)}>View</Button>
                 <Button variant="danger" className={"mx-1"} onClick={()=>setShowDanger(true)}>Delete</Button>
                 <Modal show={showDanger} onHide={() => setShowDanger(false)}>

@@ -51,7 +51,7 @@ export default function NaviBar() {
                                 <Nav.Link>Admin</Nav.Link>
                             </LinkContainer>) : (<div/>)
                             }
-                            {currentUser ? (<LinkContainer to="/createTask">
+                            {currentUser ? (<LinkContainer to="/task/create">
                                 <Nav.Link>Create task</Nav.Link>
                             </LinkContainer>) : (<div/>)}
                         </Nav>
