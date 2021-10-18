@@ -46,10 +46,6 @@ public class Task {
     private float rating = 0;
     private int ratingCount = 0;
 
-    public void addRating(int rating){
-//        ratingCount++;
-        this.rating = (this.rating * this.ratingCount + rating) / (++this.ratingCount);
-    }
     public Task(String title, Theme theme, String conditionURL, Set<Tag> tags, Set<String> images,
                 Set<String> answers, User owner) {
         this.title = title;
@@ -63,6 +59,10 @@ public class Task {
 
     public Task() {
 
+    }
+
+    public void addRating(int rating) {
+        this.rating = (this.rating * this.ratingCount + rating) / (++this.ratingCount);
     }
 
     @Override

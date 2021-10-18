@@ -49,7 +49,7 @@ public class AdminController {
 
 
     @GetMapping("/getProfile")
-    public ResponseEntity<?> getLoginPage(@RequestParam(value = "uid", required = false) String uid, HttpServletRequest request) throws FirebaseAuthException {
+    public ResponseEntity<?> getLoginPage(@RequestParam(value = "uid") String uid, HttpServletRequest request) throws FirebaseAuthException {
         System.out.println("GetProfile");
         try {
             FirebaseToken decodedToken = firebaseService.getDecodedToken(request);

@@ -19,6 +19,7 @@ public interface TaskMapper {
 
     @Mapping(target = "tags", expression = "java(dto.getTags().stream().map(com.CourseProject.MathApp.models.Tag::new).collect(java.util.stream.Collectors.toSet()))")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "ratingCount", ignore = true)
     Task fromDto(TaskDto dto);
 
 }

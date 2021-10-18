@@ -42,9 +42,7 @@ public class User {
     )
     private Set<Long> ratedTasks = new HashSet<>();
     private boolean darkMode = false;
-    public void changeDarkMode(){
-        this.darkMode = !this.darkMode;
-    }
+
     public User(String uid, String username, String email, String provider) {
         this.uid = uid;
         this.username = username;
@@ -57,6 +55,10 @@ public class User {
 
     public User() {
 
+    }
+
+    public void changeDarkMode() {
+        this.darkMode = !this.darkMode;
     }
 
     public void addCurrentTask(Long taskId) {

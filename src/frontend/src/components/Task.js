@@ -47,7 +47,7 @@ export default function Task({mode = "view"}) {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
                     });
-                await axios.get("/task/checkSolvedTask", {
+                await axios.get("/task/utils/checkSolvedTask", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,
@@ -63,7 +63,7 @@ export default function Task({mode = "view"}) {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
                     });
-                await axios.get("/task/checkTaskRated", {
+                await axios.get("/task/utils/checkTaskRated", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,
@@ -93,7 +93,7 @@ export default function Task({mode = "view"}) {
 
     async function addRating(rate) {
         await currentUser.getIdToken(true).then(async (idToken) => {
-            await axios.post("/task/addRating", [], {
+            await axios.post("/task/utils/addRating", [], {
                 headers: {
                     "Content-Type": "application/json",
                     idToken: idToken,

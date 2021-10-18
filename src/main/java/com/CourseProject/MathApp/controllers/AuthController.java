@@ -4,7 +4,6 @@ import com.CourseProject.MathApp.models.User;
 import com.CourseProject.MathApp.security.FirebaseService;
 import com.CourseProject.MathApp.service.UserServiceImpl;
 import com.google.api.client.util.ArrayMap;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -49,8 +46,9 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
     @GetMapping("/getDarkMode")
-    public ResponseEntity<?> getMode( HttpServletRequest request) {
+    public ResponseEntity<?> getMode(HttpServletRequest request) {
         System.out.println("getDarkMode");
         try {
             FirebaseToken decodedToken = firebaseService.getDecodedToken(request);
@@ -63,8 +61,9 @@ public class AuthController {
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
     @PostMapping("/changeDarkMode")
-    public ResponseEntity<?> changeMode( HttpServletRequest request) {
+    public ResponseEntity<?> changeMode(HttpServletRequest request) {
         System.out.println("changeDarkMode");
         try {
             FirebaseToken decodedToken = firebaseService.getDecodedToken(request);

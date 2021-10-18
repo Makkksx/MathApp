@@ -13,7 +13,7 @@ export default function TaskAnswerChecker({taskId, answers, solved, getSolved}) 
 
     const sendAnswer = async () => {
         await currentUser.getIdToken(true).then(async (idToken) => {
-            await axios.post("/task/currentAnswer", taskId, {
+            await axios.post("/task/utils/currentAnswer", taskId, {
                 headers: {
                     "Content-Type": "application/json",
                     idToken: idToken,

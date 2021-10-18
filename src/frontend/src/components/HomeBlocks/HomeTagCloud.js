@@ -8,7 +8,7 @@ export default function HomeTagCloud() {
     const alert = useAlert()
     useEffect(() => {
         async function fetchData() {
-            await axios.get("/task/getAllTags")
+            await axios.get("/task/utils/getAllTags")
                 .then(response => {
                     setTagData(response.data)
                 }).catch((error) => {

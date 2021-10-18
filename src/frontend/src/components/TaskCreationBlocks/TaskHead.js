@@ -29,7 +29,7 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
     useEffect(() => {
         async function fetchData() {
             await auth.currentUser.getIdToken(true).then(async (idToken) => {
-                await axios.get("/task/getAllTagNames", {
+                await axios.get("/task/utils/getAllTagNames", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,
@@ -41,7 +41,7 @@ export default function TaskHead({getTitle, getTheme, getTags}) {
                         alert.show("No access!", {timeout: 2000, type: 'error'})
                         console.log(error);
                     });
-                await axios.get("/task/getAllThemes", {
+                await axios.get("/task/utils/getAllThemes", {
                     headers: {
                         "Content-Type": "application/json",
                         idToken: idToken,
